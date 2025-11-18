@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Poin Pelanggaran Murid SMK</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .login-container {
+            max-width: 400px;
+            margin: 80px auto;
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .login-container h1 {
+            text-align: center;
+            font-size: 2em;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .login-container p {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #555;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group .hint {
+            font-size: 0.8em;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .app {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin: 0;
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 10px 20px;
+            border-radius: 50px;
+        }
+
+        .user-section span {
+            color: white;
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            padding: 8px 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 30px;
+        }
+
+        .section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .section h2 {
+            color: #333;
+            font-size: 1.5em;
+        }
+
+        button {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+        }
+
+        input[type="text"], input[type="date"], input[type="time"], input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-card .value {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 0.95em;
+        }
+
+        th {
+            background: #f5f5f5;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        tr:hover {
+            background: #f9f9f9;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .badge-1 { background: #fff3cd; color: #856404; }
+        .badge-2 { background: #f8d7da; color: #721c24; }
+        .badge-3 { background: #d1ecf1; color: #0c5460; }
+
+        .empty {
+            text-align: center;
+            color: #999;
+            padding: 30px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .table-section {
+            grid-column: 1 / -1;
+        }
+
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+            .header {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .two-col {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- LOGIN PAGE -->
+<div id="loginPage">
+    <div class="login-container">
+        <h1>📊 Sistem Poin Pelanggaran Murid SMK ARRAHMAH</h1>
+        <p>Login dengan Username dan Password</p>
+        
+        <div class="form-group">
+            <label>Username</label>
+            <input type="text" id="txtUsername" placeholder="Masukkan username">
+        </div>
+
+        <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="txtPassword" placeholder="Masukkan password" minlength="6">
+            <div class="hint">Minimal 6 karakter</div>
+        </div>
+
+        <button class="login-btn" id="btnLogin">Login</button>
+    </div>
+</div>
+
+<!-- MAIN APP PAGE -->
+<div id="mainApp" class="hidden">
+    <div class="app">
+        <div class="header">
+            <h1>📊 Sistem Poin Pelanggaran Murid SMK ARRAHMAH</h1>
+            <div class="user-section">
+                <span id="usernameDisplay"></span>
+                <button class="logout-btn" id="btnLogout">Logout</button>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- INPUT SECTION -->
+            <div class="section">
+                <h2>📝 Input Data Pelanggaran</h2>
+                
+                <div class="form-group">
+                    <label>Nama Murid</label>
+                    <input type="text" id="namaMurid" placeholder="Masukkan nama murid">
+                </div>
+
+                <div class="two-col">
+                    <div class="form-group">
+                        <label>Kelas</label>
+                        <select id="kelasSelect">
+                            <option value="">-- Pilih Kelas --</option>
+                            <option value="10">Kelas 10</option>
+                            <option value="11">Kelas 11</option>
+                            <option value="12">Kelas 12</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Jurusan</label>
+                        <select id="jurusanSelect">
+                            <option value="">-- Pilih Jurusan --</option>
+                            <option value="TKR 1">TKR 1</option>
+                            <option value="TKR 2">TKR 2</option>
+                            <option value="TSM">TSM</option>
+                            <option value="TKJ">TKJ</option>
+                            <option value="APHP">APHP</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Kategori Pelanggaran</label>
+                    <select id="kategoriSelect">
+                        <option value="">-- Pilih Kategori --</option>
+                    </select>
+                </div>
+
+                <div class="two-col">
+                    <div class="form-group">
+                        <label>Tanggal Pelanggaran</label>
+                        <input type="date" id="tanggalInput">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Waktu Pelanggaran</label>
+                        <input type="time" id="waktuInput">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Keterangan</label>
+                    <input type="text" id="keteranganInput" placeholder="Keterangan (opsional)">
+                </div>
+
+                <button id="btnTambah">➕ Tambah Pelanggaran</button>
+            </div>
+
+            <!-- STATS SECTION -->
+            <div class="section">
+                <h2>📈 Statistik</h2>
+                
+                <div class="stats">
+                    <div class="stat-card">
+                        <div>Total Murid</div>
+                        <div class="value" id="totalMurid">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div>Total Poin</div>
+                        <div class="value" id="totalPoin">0</div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 20px; padding: 15px; background: #f5f5f5; border-radius: 10px;">
+                    <h3 style="margin-bottom: 10px;">🗂️ Kelola Kategori</h3>
+                    
+                    <div class="form-group">
+                        <label>Nama Kategori</label>
+                        <input type="text" id="namaKat" placeholder="Contoh: Tidak Membawa Buku">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Poin</label>
+                        <input type="number" id="poinKat" min="1" max="10" value="1">
+                    </div>
+
+                    <button class="btn-success" id="btnTambahKat" style="width: 100%;">➕ Tambah Kategori</button>
+
+                    <div id="daftarKat" style="margin-top: 15px;"></div>
+                </div>
+            </div>
+
+            <!-- TABLE SECTION -->
+            <div class="section table-section">
+                <h2>📋 Data Pelanggaran</h2>
+                <div id="tableArea"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ===== STATE =====
+    let currentUser = null;
+    let data = {
+        kategori: [
+            { id: 1, nama: 'Terlambat', poin: 1, badge: 'badge-1', builtin: true },
+            { id: 2, nama: 'Baju Keluar', poin: 2, badge: 'badge-2', builtin: true },
+            { id: 3, nama: 'Tidak Pakai Dasi', poin: 1, badge: 'badge-3', builtin: true }
+        ],
+        pelanggaran: []
+    };
+
+    // ===== SAVE & LOAD =====
+    function saveData() {
+        if (!currentUser) return;
+        localStorage.setItem('user_' + currentUser, JSON.stringify(data));
+    }
+
+    function loadData() {
+        if (!currentUser) return;
+        const saved = localStorage.getItem('user_' + currentUser);
+        if (saved) {
+            data = JSON.parse(saved);
+        }
+    }
+
+    // ===== LOGIN =====
+    document.getElementById('btnLogin').addEventListener('click', function() {
+        const username = document.getElementById('txtUsername').value.trim();
+        const password = document.getElementById('txtPassword').value.trim();
+
+        if (!username) {
+            alert('Username harus diisi!');
+            return;
+        }
+
+        if (!password) {
+            alert('Password harus diisi!');
+            return;
+        }
+
+        if (password.length < 6) {
+            alert('Password minimal 6 karakter!');
+            return;
+        }
+
+        if (!/^[a-zA-Z0-9]{6,}$/.test(password)) {
+            alert('Password hanya huruf (A-Z, a-z) dan angka (0-9)!');
+            return;
+        }
+
+        currentUser = username;
+        loadData();
+        
+        document.getElementById('usernameDisplay').textContent = '👤 ' + username;
+        document.getElementById('loginPage').classList.add('hidden');
+        document.getElementById('mainApp').classList.remove('hidden');
+        
+        refreshUI();
+    });
+
+    // ===== LOGOUT =====
+    function setupLogoutButton() {
+        const logoutBtn = document.getElementById('btnLogout');
+        if (logoutBtn) {
+            logoutBtn.removeEventListener('click', handleLogout);
+            logoutBtn.addEventListener('click', handleLogout);
+        }
+    }
+
+    function handleLogout() {
+        if (!confirm('Yakin ingin logout?')) return;
+
+        saveData();
+        currentUser = null;
+        data = {
+            kategori: [
+                { id: 1, nama: 'Terlambat', poin: 1, badge: 'badge-1', builtin: true },
+                { id: 2, nama: 'Baju Keluar', poin: 2, badge: 'badge-2', builtin: true },
+                { id: 3, nama: 'Tidak Pakai Dasi', poin: 1, badge: 'badge-3', builtin: true }
+            ],
+            pelanggaran: []
+        };
+
+        document.getElementById('txtUsername').value = '';
+        document.getElementById('txtPassword').value = '';
+        document.getElementById('loginPage').classList.remove('hidden');
+        document.getElementById('mainApp').classList.add('hidden');
+        
+        alert('Logout berhasil!');
+    }
+
+    setupLogoutButton();
+
+    // ===== KATEGORI =====
+    document.getElementById('btnTambahKat').addEventListener('click', function() {
+        const nama = document.getElementById('namaKat').value.trim();
+        const poin = parseInt(document.getElementById('poinKat').value);
+
+        if (!nama) {
+            alert('Nama kategori harus diisi!');
+            return;
+        }
+
+        const newId = Math.max(...data.kategori.map(k => k.id), 0) + 1;
+        data.kategori.push({ id: newId, nama, poin, badge: 'badge-' + newId, builtin: false });
+        
+        saveData();
+        document.getElementById('namaKat').value = '';
+        document.getElementById('poinKat').value = '1';
+        refreshUI();
+        alert('Kategori ditambahkan!');
+    });
+
+    function hapusKategori(id) {
+        const k = data.kategori.find(x => x.id === id);
+        if (!k) return;
+        if (k.builtin) {
+            alert('Tidak bisa hapus kategori bawaan!');
+            return;
+        }
+        if (data.pelanggaran.some(p => p.kategori === id)) {
+            alert('Kategori masih digunakan!');
+            return;
+        }
+        if (!confirm('Hapus ' + k.nama + '?')) return;
+
+        data.kategori = data.kategori.filter(x => x.id !== id);
+        saveData();
+        refreshUI();
+    }
+
+    // ===== PELANGGARAN =====
+    document.getElementById('btnTambah').addEventListener('click', function() {
+        const nama = document.getElementById('namaMurid').value.trim();
+        const kelas = document.getElementById('kelasSelect').value;
+        const jurusan = document.getElementById('jurusanSelect').value;
+        const kid = parseInt(document.getElementById('kategoriSelect').value);
+        const tgl = document.getElementById('tanggalInput').value;
+        const jam = document.getElementById('waktuInput').value;
+        const ket = document.getElementById('keteranganInput').value.trim();
+
+        if (!nama || !kelas || !jurusan || !kid || !tgl || !jam) {
+            alert('Isi semua field!');
+            return;
+        }
+
+        const k = data.kategori.find(x => x.id === kid);
+        if (!k) {
+            alert('Kategori tidak ditemukan!');
+            return;
+        }
+
+        data.pelanggaran.push({
+            id: Date.now(),
+            nama, kelas, jurusan, kategori: kid, tanggal: tgl, waktu: jam, keterangan: ket, poin: k.poin
+        });
+
+        saveData();
+        document.getElementById('namaMurid').value = '';
+        document.getElementById('kelasSelect').value = '';
+        document.getElementById('jurusanSelect').value = '';
+        document.getElementById('kategoriSelect').value = '';
+        document.getElementById('keteranganInput').value = '';
+        refreshUI();
+    });
+
+    function hapusPelanggaran(id) {
+        if (!confirm('Hapus data ini?')) return;
+        data.pelanggaran = data.pelanggaran.filter(p => p.id !== id);
+        saveData();
+        refreshUI();
+    }
+
+    // ===== UI =====
+    function refreshUI() {
+        refreshKategori();
+        refreshTanggal();
+        refreshTabel();
+        refreshStats();
+        refreshDaftarKat();
+    }
+
+    function refreshKategori() {
+        const sel = document.getElementById('kategoriSelect');
+        sel.innerHTML = '<option value="">-- Pilih Kategori --</option>';
+        data.kategori.forEach(k => {
+            sel.innerHTML += '<option value="' + k.id + '">' + k.nama + '</option>';
+        });
+    }
+
+    function refreshTanggal() {
+        const now = new Date();
+        document.getElementById('tanggalInput').value = now.toISOString().split('T')[0];
+        const h = String(now.getHours()).padStart(2, '0');
+        const m = String(now.getMinutes()).padStart(2, '0');
+        document.getElementById('waktuInput').value = h + ':' + m;
+    }
+
+    function refreshStats() {
+        const murid = new Set(data.pelanggaran.map(p => p.nama)).size;
+        const poin = data.pelanggaran.reduce((s, p) => s + p.poin, 0);
+        document.getElementById('totalMurid').textContent = murid;
+        document.getElementById('totalPoin').textContent = poin;
+    }
+
+    function refreshDaftarKat() {
+        const area = document.getElementById('daftarKat');
+        if (!data.kategori.length) {
+            area.innerHTML = '<p style="text-align:center;color:#888;">Belum ada kategori</p>';
+            return;
+        }
+        area.innerHTML = data.kategori.map(k => {
+            return '<div style="display:flex;justify-content:space-between;padding:8px;background:white;border-radius:5px;margin:5px 0;">' +
+                '<div><span class="badge ' + k.badge + '">' + k.nama + '</span> <strong>' + k.poin + ' poin</strong></div>' +
+                (k.builtin ? '' : '<button style="padding:4px 12px;font-size:0.8em;" onclick="hapusKategori(' + k.id + ')">Hapus</button>') +
+                '</div>';
+        }).join('');
+    }
+
+    function refreshTabel() {
+        const area = document.getElementById('tableArea');
+        if (!data.pelanggaran.length) {
+            area.innerHTML = '<div class="empty">🔍 Belum ada data pelanggaran</div>';
+            return;
+        }
+
+        const murid = [...new Set(data.pelanggaran.map(p => p.nama))].sort();
+        let html = '<table><thead><tr><th>No</th><th>Nama</th><th>Kelas</th><th>Jurusan</th><th>Kategori</th><th>Tanggal</th><th>Waktu</th><th>Keterangan</th><th>Poin</th><th>Aksi</th></tr></thead><tbody>';
+
+        let no = 1;
+        murid.forEach(n => {
+            const list = data.pelanggaran.filter(p => p.nama === n).sort((a, b) => 
+                new Date(b.tanggal + ' ' + b.waktu) - new Date(a.tanggal + ' ' + a.waktu)
+            );
+
+            list.forEach((p, i) => {
+                const k = data.kategori.find(x => x.id === p.kategori);
+                html += '<tr>';
+                if (i === 0) {
+                    html += '<td rowspan="' + list.length + '">' + no + '</td>';
+                    html += '<td rowspan="' + list.length + '"><strong>' + n + '</strong></td>';
+                    html += '<td rowspan="' + list.length + '">' + p.kelas + '</td>';
+                    html += '<td rowspan="' + list.length + '">' + p.jurusan + '</td>';
+                }
+                html += '<td><span class="badge ' + (k ? k.badge : 'badge-1') + '">' + (k ? k.nama : 'N/A') + '</span></td>';
+                html += '<td>' + p.tanggal + '</td>';
+                html += '<td>' + p.waktu + '</td>';
+                html += '<td>' + (p.keterangan || '-') + '</td>';
+                html += '<td><strong>' + p.poin + '</strong></td>';
+                html += '<td><button style="padding:4px 8px;font-size:0.8em;" class="btn-danger" onclick="hapusPelanggaran(' + p.id + ')">Hapus</button></td>';
+                html += '</tr>';
+            });
+            no++;
+        });
+
+        html += '</tbody></table>';
+        area.innerHTML = html;
+    }
+</script>
+
+</body>
+</html>
